@@ -251,7 +251,7 @@
 
     sliderArea.insertBefore(wrap, divider);
 
-    return { wrap, top, bottom };
+    return { wrap, top, bottom, labelTop, labelBottom };
   }
 
   pairs.forEach(p => wraps.push(buildPairDom(p)));
@@ -267,10 +267,13 @@
   buildIndicator();
 
   function applySplit(percent, instant){
-    splitPercent = Math.max(5, Math.min(95, percent));
+    splitPercent = Math.max(0, Math.min(100, percent));
     wraps.forEach(w => {
       w.top.style.clipPath = 'inset(0 0 ' + (100 - splitPercent) + '% 0)';
       w.bottom.style.clipPath = 'inset(' + splitPercent + '% 0 0 0)';
+      // quando a fatia de uma imagem fica pequena, esconde o texto dela antes de chegar no fim
+      w.labelTop.style.opacity = splitPercent <= 20 ? '0' : '1';
+      w.labelBottom.style.opacity = splitPercent >= 80 ? '0' : '1';
     });
     divider.style.top = splitPercent + '%';
     handle.style.top = splitPercent + '%';
@@ -346,14 +349,16 @@
     dragging = false;
   }
 
+  // Arraste só funciona pegando no botão (círculo) central.
   handle.addEventListener('pointerdown', e => {
     handle.setPointerCapture(e.pointerId);
+    sliderArea.classList.add('dragging');
     startDrag(e.clientX);
     e.preventDefault();
   });
   handle.addEventListener('pointermove', e => { moveDrag(e.clientX); });
-  handle.addEventListener('pointerup', endDrag);
-  handle.addEventListener('pointercancel', endDrag);
-  handle.addEventListener('lostpointercapture', endDrag);
+  handle.addEventListener('pointerup', () => { sliderArea.classList.remove('dragging'); endDrag(); });
+  handle.addEventListener('pointercancel', () => { sliderArea.classList.remove('dragging'); endDrag(); });
+  handle.addEventListener('lostpointercapture', () => { sliderArea.classList.remove('dragging'); endDrag(); });
 
 })();
