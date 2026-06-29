@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg531" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 440 682.7">
+  <!-- Generator: Adobe Illustrator 30.6.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 109)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+        stroke: #ce9d4e;
+        stroke-miterlimit: 13.3;
+        stroke-width: 40px;
+      }
+    </style>
+  </defs>
+  <g id="g537">
+    <g id="g539">
+      <g id="g541">
+        <g id="g551">
+          <path id="path553" class="st0" d="M380,20c0,240-160,196.4-160,321.3"/>
+        </g>
+        <g id="g555">
+          <path id="path557" class="st0" d="M220,341.3c0-125-160-81.3-160-321.3"/>
+        </g>
+        <g id="g567">
+          <path id="path569" class="st0" d="M380,662.7c0-240-160-196.4-160-321.3"/>
+        </g>
+        <g id="g571">
+          <path id="path573" class="st0" d="M220,341.3c0,125-160,81.3-160,321.3"/>
+        </g>
+        <g id="g575">
+          <path id="path577" class="st0" d="M68.3,105.8c11.1-2.7,21.9-4.4,31.7-4.4,46.9,0,120,40,120,40,0,0,73.1,40,120,40"/>
+        </g>
+        <g id="g579">
+          <path id="path581" class="st0" d="M0,20h440"/>
+        </g>
+        <g id="g583">
+          <path id="path585" class="st0" d="M0,662.7h440"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -48,14 +48,15 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:0.6vw;
-    padding:3.6vw 0 4vw;
+    gap:0.3vw;
+    padding:1vw 0 1vw;
     pointer-events:none;
     background:linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0) 100%);
   }
 
   .title-area h1 {
     color:#C9A84C;
+    font-family:'Bebas Neue', Georgia, 'Times New Roman', serif;
     font-size:3.1vw;
     letter-spacing:0.35em;
     text-align:center;
@@ -79,8 +80,7 @@
     opacity:0.6;
   }
 
-  .title-icon { width:3vw; height:3vw; flex-shrink:0; }
-  .title-icon circle, .title-icon line { stroke:#C9A84C; }
+  .title-icon { width:3vw; height:3vw; flex-shrink:0; object-fit:contain; }
 
   /* ===== SLIDER AREA — fills the whole screen, draggable anywhere ===== */
   .slider-area {
@@ -120,14 +120,14 @@
     transition: opacity 200ms ease;
   }
   .label-top { top:19vw; }
-  .label-bottom { bottom:2.5vw; }
+  .label-bottom { bottom:11vw; }
 
   .divider {
     position:absolute;
     left:0; right:0;
     height:2px;
-    background:linear-gradient(90deg, rgba(46,255,150,0) 0%, rgba(46,255,150,0.95) 50%, rgba(46,255,150,0) 100%);
-    box-shadow: 0 0 10px rgba(46,255,150,0.85), 0 0 26px rgba(0,200,110,0.5);
+    background:linear-gradient(90deg, rgba(201,160,86,0) 0%, rgba(201,160,86,0.95) 50%, rgba(201,160,86,0) 100%);
+    box-shadow: 0 0 10px rgba(201,160,86,0.85), 0 0 26px rgba(176,130,50,0.5);
     transition: top 80ms linear;
     z-index:15;
   }
@@ -135,34 +135,21 @@
   .handle {
     position:absolute;
     left:50%;
-    width:7.6vw; height:7.6vw;
-    max-width:60px; max-height:60px;
+    width:9.2vw; height:9.2vw;
+    max-width:74px; max-height:74px;
     transform: translate(-50%, -50%) scale(1);
-    border-radius:50%;
-    border:1.5px solid rgba(80,255,150,0.85);
-    background:
-      radial-gradient(circle at 35% 30%, #aaffcd 0%, #18ff8a 28%, #0a8a4a 55%, #06371f 80%, #000000 100%);
-    box-shadow:
-      0 4px 16px rgba(0,0,0,0.6),
-      0 0 0 6px rgba(24,255,138,0.10),
-      0 0 26px rgba(24,255,138,0.7);
     display:flex;
     align-items:center;
     justify-content:center;
     z-index:20;
     cursor:grab;
-    transition: transform 150ms ease, box-shadow 150ms ease, top 80ms linear;
+    transition: transform 150ms ease, filter 150ms ease, top 80ms linear;
   }
-  .handle svg { width:48%; height:48%; }
-  .handle svg path, .handle svg line { stroke:#06301c; }
+  .handle img { width:100%; height:100%; }
 
   .slider-area.dragging .handle {
     cursor:grabbing;
     transform: translate(-50%, -50%) scale(1.1);
-    box-shadow:
-      0 6px 22px rgba(0,0,0,0.55),
-      0 0 0 9px rgba(46,255,150,0.16),
-      0 0 34px rgba(46,255,150,0.85);
   }
 
 
@@ -179,21 +166,17 @@
   }
 
   .nav-btn {
-    width:6.4vw; height:6.4vw;
-    max-width:54px; max-height:54px;
-    border-radius:50%;
-    border:1.5px solid rgba(201,168,76,0.55);
-    background:rgba(255,255,255,0.04);
+    width:8.4vw; height:8.4vw;
+    max-width:72px; max-height:72px;
     display:flex;
     align-items:center;
     justify-content:center;
-    color:#C9A84C;
-    font-size:2.6vw;
     cursor:pointer;
     pointer-events:auto;
-    transition: background 150ms ease, transform 150ms ease;
+    transition: transform 150ms ease;
   }
-  .nav-btn:active { transform:scale(0.9); background:rgba(201,168,76,0.18); }
+  .nav-btn img { width:100%; height:100%; }
+  .nav-btn:active { transform:scale(0.9); }
 
   .pair-indicator {
     position:absolute;
@@ -205,9 +188,14 @@
     pointer-events:auto;
   }
   .dot {
-    width:0.9vw; height:0.9vw;
+    width:1.1vw; height:1.1vw;
     border-radius:50%;
-    background:rgba(201,168,76,0.3);
-    transition: background 250ms ease;
+    background:rgba(255,255,255,0.55);
+    border:1px solid rgba(0,0,0,0.5);
+    box-shadow:0 1px 3px rgba(0,0,0,0.6);
+    transition: background 250ms ease, box-shadow 250ms ease;
   }
-  .dot.active { background:#C9A84C; }
+  .dot.active {
+    background:#C9A84C;
+    box-shadow:0 0 6px rgba(201,168,76,0.9), 0 1px 3px rgba(0,0,0,0.6);
+  }
