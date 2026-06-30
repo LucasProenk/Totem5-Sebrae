@@ -136,8 +136,8 @@
   .handle {
     position:absolute;
     left:50%;
-    width:9.2vw; height:9.2vw;
-    max-width:74px; max-height:74px;
+    width:10.2vw; height:10.2vw;
+    max-width:82px; max-height:82px;
     transform: translate(-50%, -50%) scale(1);
     display:flex;
     align-items:center;
