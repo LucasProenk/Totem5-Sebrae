@@ -55,14 +55,15 @@
   }
 
   .title-area h1 {
-    color:#C9A84C;
-    font-family:'Bebas Neue', Georgia, 'Times New Roman', serif;
+    color:#f4d2a8;
+    font-family:'Roboto', Georgia, 'Times New Roman', serif;
+    font-weight:700;
     font-size:3.1vw;
     letter-spacing:0.35em;
     text-align:center;
     line-height:1.35;
     text-transform:uppercase;
-    text-shadow: 0 0 18px rgba(201,168,76,0.35);
+    text-shadow: 0 0 18px rgba(244,210,168,0.35);
   }
 
   .title-line {
@@ -76,11 +77,11 @@
   .title-line .bar {
     flex:1;
     height:1px;
-    background:linear-gradient(90deg, transparent, #C9A84C, transparent);
+    background:linear-gradient(90deg, transparent, #f4d2a8, transparent);
     opacity:0.6;
   }
 
-  .title-icon { width:3vw; height:3vw; flex-shrink:0; object-fit:contain; }
+  .title-icon { width:1.8vw; height:1.8vw; flex-shrink:0; object-fit:contain; }
 
   /* ===== SLIDER AREA — fills the whole screen, draggable anywhere ===== */
   .slider-area {
@@ -126,8 +127,8 @@
     position:absolute;
     left:0; right:0;
     height:2px;
-    background:linear-gradient(90deg, rgba(201,160,86,0) 0%, rgba(201,160,86,0.95) 50%, rgba(201,160,86,0) 100%);
-    box-shadow: 0 0 10px rgba(201,160,86,0.85), 0 0 26px rgba(176,130,50,0.5);
+    background:linear-gradient(90deg, rgba(206,157,78,0) 0%, rgba(206,157,78,0.95) 50%, rgba(206,157,78,0) 100%);
+    box-shadow: 0 0 10px rgba(206,157,78,0.9), 0 0 26px rgba(206,157,78,0.5);
     transition: top 80ms linear;
     z-index:15;
   }
@@ -196,6 +197,6 @@
     transition: background 250ms ease, box-shadow 250ms ease;
   }
   .dot.active {
-    background:#C9A84C;
-    box-shadow:0 0 6px rgba(201,168,76,0.9), 0 1px 3px rgba(0,0,0,0.6);
+    background:#f4d2a8;
+    box-shadow:0 0 6px rgba(244,210,168,0.9), 0 1px 3px rgba(0,0,0,0.6);
   }
