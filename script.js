@@ -197,17 +197,17 @@
 
   const pairs = [
     {
-      labelTop: 'Pantanal — Seca',
-      labelBottom: 'Pantanal — Cheia',
-      imgTop: genSeca(),
-      imgBottom: genCheia()
+      labelTop: 'Girassol — Dia',
+      labelBottom: 'Girassol — Noite',
+      imgTop: 'bg1/Girassol Dia.png',
+      imgBottom: 'bg1/Girassol Noite.png'
     },
     {
-      labelTop: 'Cerrado — Seca',
-      labelBottom: 'Cerrado — Chuvas',
-      imgTop: genCerradoSeca(),
-      imgBottom: genCerradoChuvas()
-    }
+      labelTop: 'Pantanal — Seca',
+      labelBottom: 'Pantanal — Cheia',
+      imgTop: 'bg2/Seca.png',
+      imgBottom: 'bg2/Cheia.png'
+    },
   ];
 
   /* ---------------------------------------------------------
@@ -236,22 +236,12 @@
     bottom.className = 'layer layer-bottom';
     bottom.style.backgroundImage = "url('" + pair.imgBottom + "')";
 
-    const labelTop = document.createElement('div');
-    labelTop.className = 'label label-top';
-    labelTop.textContent = pair.labelTop;
-
-    const labelBottom = document.createElement('div');
-    labelBottom.className = 'label label-bottom';
-    labelBottom.textContent = pair.labelBottom;
-
     wrap.appendChild(top);
     wrap.appendChild(bottom);
-    wrap.appendChild(labelTop);
-    wrap.appendChild(labelBottom);
 
     sliderArea.insertBefore(wrap, divider);
 
-    return { wrap, top, bottom, labelTop, labelBottom };
+    return { wrap, top, bottom };
   }
 
   pairs.forEach(p => wraps.push(buildPairDom(p)));
@@ -271,9 +261,6 @@
     wraps.forEach(w => {
       w.top.style.clipPath = 'inset(0 0 ' + (100 - splitPercent) + '% 0)';
       w.bottom.style.clipPath = 'inset(' + splitPercent + '% 0 0 0)';
-      // quando a fatia de uma imagem fica pequena, esconde o texto dela antes de chegar no fim
-      w.labelTop.style.opacity = splitPercent <= 20 ? '0' : '1';
-      w.labelBottom.style.opacity = splitPercent >= 80 ? '0' : '1';
     });
     divider.style.top = splitPercent + '%';
     handle.style.top = splitPercent + '%';
@@ -350,6 +337,13 @@
   }
 
   // Arraste só funciona pegando no botão (círculo) central.
+  let idleTimer = null;
+  function resetIdleTimer(){
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => applySplit(50), 30000);
+  }
+  resetIdleTimer();
+
   handle.addEventListener('pointerdown', e => {
     handle.setPointerCapture(e.pointerId);
     sliderArea.classList.add('dragging');
@@ -357,8 +351,8 @@
     e.preventDefault();
   });
   handle.addEventListener('pointermove', e => { moveDrag(e.clientX); });
-  handle.addEventListener('pointerup', () => { sliderArea.classList.remove('dragging'); endDrag(); });
-  handle.addEventListener('pointercancel', () => { sliderArea.classList.remove('dragging'); endDrag(); });
-  handle.addEventListener('lostpointercapture', () => { sliderArea.classList.remove('dragging'); endDrag(); });
+  handle.addEventListener('pointerup', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+  handle.addEventListener('pointercancel', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+  handle.addEventListener('lostpointercapture', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
 
 })();
