@@ -195,20 +195,16 @@
     });
   }
 
-  const pairs = [
-    {
-      labelTop: 'Girassol — Dia',
-      labelBottom: 'Girassol — Noite',
-      imgTop: 'bg1/Girassol Dia.png',
-      imgBottom: 'bg1/Girassol Noite.png'
-    },
-    {
-      labelTop: 'Pantanal — Seca',
-      labelBottom: 'Pantanal — Cheia',
-      imgTop: 'bg2/Seca.png',
-      imgBottom: 'bg2/Cheia.png'
-    },
-  ];
+  const candidates = ORDEM;
+
+  function imageExists(src){
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  }
 
   /* ---------------------------------------------------------
      2. DOM SETUP
@@ -220,9 +216,10 @@
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
+  let pairs = [];
   let currentIndex = 0;
   let splitPercent = 50;
-  let wraps = []; // {wrap, top, bottom}
+  let wraps = [];
 
   function buildPairDom(pair){
     const wrap = document.createElement('div');
@@ -244,7 +241,10 @@
     return { wrap, top, bottom };
   }
 
-  pairs.forEach(p => wraps.push(buildPairDom(p)));
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartPercent = 50;
+  let idleTimer = null;
 
   function buildIndicator(){
     pairIndicator.innerHTML = '';
@@ -254,7 +254,6 @@
       pairIndicator.appendChild(dot);
     });
   }
-  buildIndicator();
 
   function applySplit(percent, instant){
     splitPercent = Math.max(0, Math.min(100, percent));
@@ -264,7 +263,6 @@
     });
     divider.style.top = splitPercent + '%';
     handle.style.top = splitPercent + '%';
-
     if(instant){
       [divider, handle].forEach(el => el.style.transition = 'none');
       wraps.forEach(w => { w.top.style.transition='none'; w.bottom.style.transition='none'; });
@@ -283,66 +281,28 @@
     buildIndicator();
   }
 
-  applySplit(50, true);
-  showPair(0);
-
-  /* ---------------------------------------------------------
-     3. NAVIGATION
-  --------------------------------------------------------- */
-  function goTo(index){
-    currentIndex = (index + pairs.length) % pairs.length;
-    showPair(currentIndex);
-  }
-
-  prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
-  nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
-
-  /* ---------------------------------------------------------
-     4. DRAG INTERACTION (mouse + touch)
-  --------------------------------------------------------- */
-  let dragging = false;
-
-  /*
-    A página é rotacionada via CSS (#stage), e nesse hardware o toque
-    chega com um desencontro entre a posição física do dedo e a posição
-    absoluta que o navegador calcula (por isso o salto ao tocar). Para
-    não depender dessa posição absoluta, o arraste aqui é por DELTA:
-    guarda onde o toque começou e o split atual, e só aplica a diferença
-    de movimento — não a posição absoluta. Isso elimina o salto.
-
-    Usamos Pointer Events (em vez de mouse+touch separados) com
-    setPointerCapture: assim o próprio elemento "handle" recebe todos os
-    eventos de movimento/soltura enquanto o gesto durar, mesmo que o
-    dedo/cursor saia da área dele — evita que um listener solto na
-    window capture eventos de outro ponteiro/gesto e mexa o slider sem
-    ninguém estar arrastando.
-  */
-  let dragStartX = 0;
-  let dragStartPercent = 50;
-
-  function startDrag(clientX){
-    dragging = true;
-    dragStartX = clientX;
-    dragStartPercent = splitPercent;
-  }
-  function moveDrag(clientX){
-    if(!dragging) return;
-    const rect = sliderArea.getBoundingClientRect();
-    const deltaPercent = ((dragStartX - clientX) / rect.width) * 100;
-    applySplit(dragStartPercent + deltaPercent);
-  }
-  function endDrag(){
-    if(!dragging) return;
-    dragging = false;
-  }
-
-  // Arraste só funciona pegando no botão (círculo) central.
-  let idleTimer = null;
   function resetIdleTimer(){
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => applySplit(50), 30000);
   }
-  resetIdleTimer();
+
+  function goTo(index){
+    currentIndex = (index + pairs.length) % pairs.length;
+    applySplit(50, true);
+    showPair(currentIndex);
+    resetIdleTimer();
+  }
+
+  function startDrag(clientX){ dragging = true; dragStartX = clientX; dragStartPercent = splitPercent; }
+  function moveDrag(clientX){
+    if(!dragging) return;
+    const rect = sliderArea.getBoundingClientRect();
+    applySplit(dragStartPercent + ((dragStartX - clientX) / rect.width) * 100);
+  }
+  function endDrag(){ if(!dragging) return; dragging = false; }
+
+  prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+  nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
 
   handle.addEventListener('pointerdown', e => {
     handle.setPointerCapture(e.pointerId);
@@ -351,8 +311,17 @@
     e.preventDefault();
   });
   handle.addEventListener('pointermove', e => { moveDrag(e.clientX); });
-  handle.addEventListener('pointerup', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
-  handle.addEventListener('pointercancel', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
-  handle.addEventListener('lostpointercapture', () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+  handle.addEventListener('pointerup',          () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+  handle.addEventListener('pointercancel',       () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+  handle.addEventListener('lostpointercapture',  () => { sliderArea.classList.remove('dragging'); endDrag(); resetIdleTimer(); });
+
+  Promise.all(candidates.map(c => imageExists(c.imgTop).then(ok => ok ? c : null)))
+    .then(results => {
+      pairs = results.filter(Boolean);
+      pairs.forEach(p => wraps.push(buildPairDom(p)));
+      applySplit(50, true);
+      showPair(0);
+      resetIdleTimer();
+    });
 
 })();
